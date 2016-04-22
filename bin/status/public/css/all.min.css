@@ -1,0 +1,248 @@
+html {
+  font-size: 10px; }
+
+body {
+  font-family: "Open Sans", "San Francisco", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.5rem;
+  color: #4f4f4f;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #f6f6f6; }
+
+main {
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden; }
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box; }
+
+a {
+  text-decoration: none;
+  color: inherit; }
+
+input {
+  color: inherit; }
+
+h1 {
+  font-size: 1.8rem;
+  color: #4f4f4f;
+  font-weight: normal;
+  margin: 4rem 0 2rem; }
+  h1 span {
+    color: #c4c4c4; }
+
+.svg-icon {
+  display: inline-block; }
+
+.button {
+  min-width: 155px;
+  text-align: center;
+  display: inline-block;
+  color: #735b84;
+  background: rgba(115, 91, 132, 0.2);
+  border-radius: 4px;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  -webkit-transition: background 0.1s linear;
+  transition: background 0.1s linear; }
+  .button + .button {
+    margin-left: 1rem; }
+  .button:hover {
+    background: rgba(115, 91, 132, 0.3); }
+
+.container {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem; }
+
+.footer-logo {
+  text-align: center;
+  margin: 2.2rem 0; }
+  .footer-logo .ac-svg {
+    width: 120px;
+    height: 50px;
+    fill: #c4c4c4; }
+
+@media (max-width: 768px) {
+  .button {
+    display: block;
+    margin-bottom: 1rem; }
+    .button + .button {
+      margin-left: 0; }
+  .container {
+    padding: 0 1rem; } }
+
+
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0); }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0); }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+.notification {
+  font-size: 1.3rem;
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap; }
+  .notification.success {
+    border-color: #c5de9e; }
+    .notification.success.fill {
+      background: rgba(197, 222, 158, 0.2); }
+    .notification.success .status-ball {
+      background: #c5de9e; }
+    .notification.success .status-icon {
+      fill: #c5de9e; }
+    .notification.success .details {
+      background: #c5de9e; }
+  .notification.error {
+    border-color: #ef6e7e; }
+    .notification.error.fill {
+      background: rgba(239, 110, 126, 0.2); }
+    .notification.error .status-ball {
+      background: #ef6e7e; }
+    .notification.error .status-icon {
+      fill: #ef6e7e; }
+    .notification.error .details {
+      background: #ef6e7e;
+      color: #fff;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); }
+  .notification .status-ball {
+    margin-left: 2rem;
+    margin-right: -1rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #c4c4c4; }
+  .notification .status-icon {
+    fill: #c4c4c4;
+    margin-left: 2rem;
+    margin-right: -0.5rem;
+    margin-top: 3px; }
+    .notification .status-icon.spin .ac-svg {
+      -webkit-animation: spin 3s linear infinite;
+              animation: spin 3s linear infinite; }
+    .notification .status-icon .ac-svg {
+      width: 16px;
+      height: 16px; }
+  .notification .message {
+    display: block;
+    padding: 2rem;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1; }
+    .notification .message .render-time {
+      position: relative;
+      -webkit-transition: opacity 0.3s linear;
+      transition: opacity 0.3s linear; }
+      .notification .message .render-time::before {
+        opacity: 0;
+        -webkit-transition: opacity 0.3s linear;
+        transition: opacity 0.3s linear; }
+      .notification .message .render-time:hover::before {
+        min-width: 130px;
+        text-align: center;
+        content: attr(data-date);
+        background: rgba(79, 79, 79, 0.98);
+        position: absolute;
+        z-index: 2;
+        color: #fff;
+        border-radius: 3px;
+        padding: 0.5rem 1rem;
+        margin-top: 25px;
+        opacity: 1; }
+  .notification .details {
+    display: block;
+    width: 100%;
+    background: #f6f6f6;
+    border-radius: 0 0 4px 4px;
+    padding: 2rem; }
+    .notification .details h2 {
+      margin-top: 0;
+      font-size: 1.5rem; }
+    .notification .details p {
+      margin: 0; }
+
+.report-list .notification {
+  margin-bottom: 1rem; }
+
+.tabs {
+  margin-top: 5rem; }
+  .tabs .tabs-list {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; }
+    .tabs .tabs-list .tab {
+      text-align: center;
+      font-size: 1.3rem;
+      background: rgba(196, 196, 196, 0.2);
+      border-radius: 4px 4px 0 0;
+      margin-right: 1rem;
+      font-weight: bold;
+      padding: 15px 25px;
+      min-width: 126px; }
+      .tabs .tabs-list .tab:hover {
+        background: rgba(196, 196, 196, 0.6); }
+      .tabs .tabs-list .tab.active {
+        background: #fff; }
+  .tabs .tab-body {
+    background: #fff;
+    border-radius: 0 4px 4px 4px;
+    padding: 3rem; }
+
+@media (max-width: 768px) {
+  .tabs .tab-body {
+    padding: 2rem; } }
+
+.top-bar {
+  min-height: 50px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: -webkit-linear-gradient(45deg, #51608d 0%, #735b84 100%);
+  background: linear-gradient(45deg, #51608d 0%, #735b84 100%);
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .top-bar .ac-svg {
+    fill: #fff;
+    height: 40px; }
+    .top-bar .ac-svg.logo {
+      width: 105px; }
+    .top-bar .ac-svg.logo-status {
+      width: 54px;
+      opacity: 0.5;
+      margin-left: 0.3rem;
+      margin-top: 2px; }
