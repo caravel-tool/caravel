@@ -2,12 +2,21 @@
 
 'use strict';
 
+// If caravel.json not found, return friendly message.
+let caravel;
+try {
+    caravel = require(process.cwd() + '/caravel.json');
+} catch(e) {
+    console.log('You must run Caravel in a folder containing a caravel.json config file.');
+    process.exit();
+}
+
+// Handle other dependencies
 const pkg        = require('../package.json');
 const exec       = require('child_process').exec;
 const path       = require('path');
 const util       = require('util');
 const rimraf     = require('rimraf');
-const caravel    = require('../caravel.json');
 const program    = require('commander');
 const Caravel    = require('./Caravel.js');
 const DataLogger = require('./DataLogger.js');
