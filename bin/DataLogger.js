@@ -1,13 +1,16 @@
 'use strict';
 
 class DataLogger {
-    constructor() {
-        this.Datastore = require('nedb');
-        this.db        = new this.Datastore({filename: process.cwd() + '/caravel_log.db', autoload: true });
-        console.log(process.cwd() + '/caravel_log.db');
+    
+    initDb() {
+        if(!this.Datastore && !this.db) {
+            this.Datastore = require('nedb');
+            this.db        = new this.Datastore({filename: process.cwd() + '/caravel_log.db', autoload: true });
+        }
     }
 
     insertLog(status, details) {
+        this.initDb();
         let self = this;
         let timestamp = +new Date;
         let date   = new Date().toISOString();
@@ -38,6 +41,7 @@ class DataLogger {
     }
 
     updateLastLog(status, details) {
+        this.initDb();
         let self = this;
         let timestamp = +new Date;
         let date   = new Date().toISOString();
@@ -58,11 +62,10 @@ class DataLogger {
             }
 
             lastLogID = lastLogID[0].id;
+            
+            console.log('Last log id: ' + lastLogID);
 
-            data.id = lastLogID;
-            console.log(lastLogID);
-
-            self.db.update({id: lastLogID}, data, {}, (err, newDoc) => {
+            self.db.update({id: lastLogID}, { $set: data }, {}, (err, numRowsAffected, newDoc) => {
                 if(err) {
                     console.log(err);
                 }
@@ -72,6 +75,7 @@ class DataLogger {
     }
 
     getLogs(cb) {
+        this.initDb();
         let self = this;
         self.db.persistence.compactDatafile()
         self.db.find({}).sort({ id: -1 }).exec((err, docs) => {
@@ -83,6 +87,7 @@ class DataLogger {
     }
 
     getLastId(cb) {
+        this.initDb();
         let self = this;
         self.db.persistence.compactDatafile()
         self.db.find({}).sort({ id: -1 }).limit(1).exec((err, docs) => {

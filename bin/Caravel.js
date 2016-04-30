@@ -1,6 +1,16 @@
 'use strict';
 
-const caravel      = require('../caravel.json');
+
+// If caravel.json not found, return friendly message.
+let caravel;
+try {
+    caravel = require(process.cwd() + '/caravel.json');
+} catch(e) {
+    console.log('You must run Caravel in a folder containing a caravel.json config file.');
+    process.exit();
+}
+
+// Handle other dependencies
 const rimraf       = require('rimraf');
 const util         = require('util');
 const exec         = require('child_process').exec;
@@ -16,31 +26,31 @@ const opts = {
 }
 
 class Caravel {
-
+    
     constructor() {
-        var self = this;
+        this.isRunning = false;
     }
 
-	fetch(cb) {
+    fetch(cb) {
         console.log('    Cloning project...')
 
         let args = caravel.branch || 'master';
         args = '-b ' + args + ' --single-branch';
         let cmd = "git clone " + " " + args + " " + caravel.repo + " " + opts.temporaryFolder;
 
-		rimraf(opts.temporaryFolder, () => {
+        rimraf(opts.temporaryFolder, () => {
             exec(cmd, (e, out, err) => {
                 if(e) {
                     console.log(err);
                 }
 
-				console.log('    [OK] Project cloned.');
+                console.log('    [OK] Project cloned.');
                 if(cb) {
                     cb();
                 }
-			});
-		});
-	}
+            });
+        });
+    }
 
     installDependencies(cb) {
         console.log('    Installing npm dependencies (may take a while)...')
@@ -52,20 +62,25 @@ class Caravel {
             if(cb) {
                 cb();
             }
-    	});
+        });
     }
 
     build(cb) {
-        var self = this;
-
-    	if(caravel.buildArgs instanceof Array && caravel.buildArgs.length > 0) {
-            console.log('    Running build scripts...')
+        console.log(this);
+        let self = this;
+        
+        if(!this.isRunning) {
             DataLogger.insertLog('running');
+        }
+
+        if(caravel.buildArgs instanceof Array && caravel.buildArgs.length > 0) {
+            console.log('    Running build scripts...')
 
             process.chdir(opts.temporaryFolder);
 
             exec(caravel.buildArgs.join(' && '), (e, out, err) => {
                 if(e || err) {
+                    self.isRunning = false;
                     DataLogger.updateLastLog('error', err + out);
                     console.log(e);
                     console.log(err);
@@ -83,19 +98,18 @@ class Caravel {
                         if(cb) {
                             cb();
                         }
+                        self.isRunning = false;
                         DataLogger.updateLastLog('success');
                         console.log('    [OK] Project successfully delivered.');
                     });
                 });
 
             });
-		}
+        }
     }
 
     watch(self) {
         self = self || this;
-
-        DataLogger.insertLog('running');
 
         console.log('    Watching for changes...');
 
@@ -141,19 +155,25 @@ class Caravel {
                 console.log(out);
                 throw "    [ERROR] Caravel could not build.";
             }
-    		let hash = out.split('\n')[0].replace(/\s{1,}.+/, '');
+            let hash = out.split('\n')[0].replace(/\s{1,}.+/, '');
             if(cb) {
                 cb(hash);
             }
-    	});
+        });
 
     }
 
     installDependenciesAndBuild() {
-        this.installDependencies(this.build);
+        DataLogger.insertLog('running');
+        this.isRunning = true;
+        this.installDependencies(() => {
+            this.build();   
+        });
     }
 
     installDependenciesAndBuildAndWatch(self) {
+        DataLogger.insertLog('running');
+        self.isRunning = true;
         self.installDependencies(() => {
             self.build(() => {
                 self.watch(self);
