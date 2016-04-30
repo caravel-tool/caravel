@@ -1,7 +1,0 @@
-{
-    "name": "Made With Riot",
-    "repo": "git@github.com:riot/made-with-riot.git",
-    "deployDirectory": "/users/kazzkiq/Sites/deployado",
-    "buildArgs": ["gulp compile:all"],
-    "buildFolder": "dist"
-}
