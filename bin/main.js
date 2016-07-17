@@ -38,6 +38,7 @@ program.command('checksum').action((url) => {
 });
 
 program.command('fetch').action(() => {
+    console.log('testing update');
     Caravel.fetch();
 });
 

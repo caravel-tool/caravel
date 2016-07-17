@@ -39,9 +39,10 @@ class Caravel {
         let cmd = "git clone " + " " + args + " " + caravel.repo + " " + opts.temporaryFolder;
 
         rimraf(opts.temporaryFolder, () => {
-            exec(cmd, (e, out, err) => {
+            let run = exec(cmd, (e, out, err) => {
                 if(e) {
                     console.log(err);
+                    process.exit();
                 }
 
                 console.log('    [OK] Project cloned.');
@@ -49,6 +50,14 @@ class Caravel {
                     cb();
                 }
             });
+            
+            if(caravel.repoPassword) {
+                run.stdin.write(caravel.repoPassword);
+            }else {
+                console.log('Deu merda');
+            }
+            
+            
         });
     }
 
@@ -57,6 +66,7 @@ class Caravel {
         exec('npm install --prefix ' + opts.temporaryFolder, (e, out, err) => {
             if(e || err) {
                 console.log(err);
+                process.exit();
             }
             console.log('    [OK] npm dependencies installed.');
             if(cb) {
@@ -73,7 +83,13 @@ class Caravel {
             DataLogger.insertLog('running');
         }
 
-        if(caravel.buildArgs instanceof Array && caravel.buildArgs.length > 0) {
+        // if buildArgs ommited or not an array, return empty array
+        if(!caravel.buildArgs || !(caravel.buildArgs instanceof Array)) {
+            caravel.buildArgs = [];
+        }
+
+        // if buildArgs actually have any args... then run them
+        if(caravel.buildArgs.length > 0) {
             console.log('    Running build scripts...')
 
             process.chdir(opts.temporaryFolder);
@@ -86,13 +102,15 @@ class Caravel {
                     console.log(err);
                     console.log(out);
                     console.log('    [ERROR] Caravel could not build.');
+                    process.exit();
 
                 }
                 console.log('    [OK] build scripts finished.');
 
                 ncp('../' + opts.temporaryFolder + '/' + caravel.buildFolder, caravel.deployDirectory, (err) => {
                     if(err) {
-                        return console.error(err);
+                        console.error(err);
+                        process.exit();
                     }
                     rimraf('../' + opts.temporatyFolder, () => {
                         if(cb) {
@@ -136,7 +154,8 @@ class Caravel {
 
         ncp(opts.temporaryFolder, caravel.deployDirectory, (err) => {
             if(err) {
-                return console.error(err);
+                console.error(err);
+                process.exit();
             }
             rimraf(opts.temporatyFolder, () => {
                 console.log('    [OK] Project successfully delivered.');
@@ -153,6 +172,7 @@ class Caravel {
                 console.log(e);
                 console.log(err);
                 console.log(out);
+                process.exit();
                 throw "    [ERROR] Caravel could not build.";
             }
             let hash = out.split('\n')[0].replace(/\s{1,}.+/, '');
