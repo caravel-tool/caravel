@@ -54,7 +54,7 @@ class Caravel {
             if(caravel.repoPassword) {
                 run.stdin.write(caravel.repoPassword);
             }else {
-                console.log('Deu merda');
+                console.log('There isn\'t repo password. Something bad happened.');
             }
             
             
