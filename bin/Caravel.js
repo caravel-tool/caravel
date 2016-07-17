@@ -4,7 +4,7 @@
 // If caravel.json not found, return friendly message.
 let caravel;
 try {
-    caravel = require(process.cwd() + '/caravel.json');
+    caravel = require(`${process.cwd()} + /caravel.json`);
 } catch(e) {
     console.log('You must run Caravel in a folder containing a caravel.json config file.');
     process.exit();
@@ -35,8 +35,8 @@ class Caravel {
         console.log('    Cloning project...')
 
         let args = caravel.branch || 'master';
-        args = '-b ' + args + ' --single-branch';
-        let cmd = "git clone " + " " + args + " " + caravel.repo + " " + opts.temporaryFolder;
+        args = `-b ${args} --single-branch`;
+        let cmd = `git clone ${args} ${caravel.repo} ${opts.temporaryFolder}`;
 
         rimraf(opts.temporaryFolder, () => {
             let run = exec(cmd, (e, out, err) => {
@@ -62,13 +62,15 @@ class Caravel {
     }
 
     installDependencies(cb) {
-        console.log('    Installing npm dependencies (may take a while)...')
-        exec('npm install --prefix ' + opts.temporaryFolder, (e, out, err) => {
+        console.log('    Installing npm dependencies (may take a while)...');
+        exec(`npm install --prefix ${opts.temporaryFolder}`, (e, out, err) => {
             if(e || err) {
                 console.log(err);
                 process.exit();
             }
+
             console.log('    [OK] npm dependencies installed.');
+
             if(cb) {
                 cb();
             }
@@ -107,12 +109,12 @@ class Caravel {
                 }
                 console.log('    [OK] build scripts finished.');
 
-                ncp('../' + opts.temporaryFolder + '/' + caravel.buildFolder, caravel.deployDirectory, (err) => {
+                ncp(`../${opts.temporaryFolder}/${caravel.buildFolder}`, caravel.deployDirectory, (err) => {
                     if(err) {
                         console.error(err);
                         process.exit();
                     }
-                    rimraf('../' + opts.temporatyFolder, () => {
+                    rimraf(`../${opts.temporatyFolder}`, () => {
                         if(cb) {
                             cb();
                         }
@@ -165,7 +167,7 @@ class Caravel {
 
     getChecksum(cb) {
         let args = caravel.branch || 'HEAD';
-        let cmd = "git ls-remote " + caravel.repo + " " + args;
+        let cmd = `git ls-remote ${caravel.repo} ${args}`;
 
         exec(cmd, (e, out, err) => {
             if(e || err) {
