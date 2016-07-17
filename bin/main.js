@@ -38,7 +38,6 @@ program.command('checksum').action((url) => {
 });
 
 program.command('fetch').action(() => {
-    console.log('testing update');
     Caravel.fetch();
 });
 
@@ -102,12 +101,26 @@ if(program.repo) {
 }
 
 if(program.tutorial) {
-    console.log('~~~~~~ Caravel Tutorial ~~~~~~');
-    console.log('1 - Configure your caravel.json file (check our site if you don\'t know what it means)');
-    console.log('2 - Install Caravel on your server by running: npm install caravel -g');
-    console.log('3 - Create a new folder and put your caravel.json file there.');
-    console.log('4 - Get into that folder and run: caravel fetch && caravel build -i (sudo may be needed)');
-    console.log('5 - To keep building automatically on repository changes, use the command: caravel watch');
-    console.log('    If you followed step 5 you can also check builds at: localhost:7007');
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    console.log('┌──────────────────────────────────────────┐');
+    console.log('│             Caravel Tutorial             │');
+    console.log('├──────────────────────────────────────────┤');
+    console.log('│ 1 - Configure your caravel.json file     │');
+    console.log('│     (visit our website for details)      │');
+    console.log('│                                          │');
+    console.log('│ 2 - Install Caravel on your server       │');
+    console.log('│     by running: npm install caravel -g   │');
+    console.log('│                                          │');
+    console.log('│ 3 - Create a new folder and put your     │');
+    console.log('│     caravel.json file there              │');
+    console.log('│                                          │');
+    console.log('│ 4 - Get into that folder and run:        │');
+    console.log('│     caravel fetch && caravel build -i    │');
+    console.log('│     (sudo may be needed)                 │');
+    console.log('│                                          │');
+    console.log('│ 5 - To detect changes and build automat. │');
+    console.log('│     use the command: caravel watch       │');
+    console.log('│                                          │');
+    console.log('│   If you followed step 5 you can also    │');
+    console.log('│   check builds at: localhost:7007        │');
+    console.log('└──────────────────────────────────────────┘');
 }

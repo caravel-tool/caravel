@@ -32,6 +32,7 @@ class Caravel {
     }
 
     fetch(cb) {
+        console.log(' ');
         console.log('    Cloning project...')
 
         let args = caravel.branch || 'master';
@@ -62,6 +63,7 @@ class Caravel {
     }
 
     installDependencies(cb) {
+        console.log(' ');
         console.log('    Installing npm dependencies (may take a while)...');
         exec(`npm install --prefix ${opts.temporaryFolder}`, (e, out, err) => {
             if(e || err) {
@@ -78,7 +80,6 @@ class Caravel {
     }
 
     build(cb) {
-        console.log(this);
         let self = this;
         
         if(!this.isRunning) {
@@ -91,8 +92,9 @@ class Caravel {
         }
 
         // if buildArgs actually have any args... then run them
-        if(caravel.buildArgs.length > 0) {
-            console.log('    Running build scripts...')
+        if(true) {
+            console.log(' ');
+            console.log('    Running build scripts...');
 
             process.chdir(opts.temporaryFolder);
 
@@ -107,7 +109,8 @@ class Caravel {
                     process.exit();
 
                 }
-                console.log('    [OK] build scripts finished.');
+                console.log(`    [OK] ${caravel.buildArgs.length} scripts performed.`);
+                console.log('    [OK] Build scripts finished.');
 
                 ncp(`../${opts.temporaryFolder}/${caravel.buildFolder}`, caravel.deployDirectory, (err) => {
                     if(err) {
@@ -120,7 +123,10 @@ class Caravel {
                         }
                         self.isRunning = false;
                         DataLogger.updateLastLog('success');
-                        console.log('    [OK] Project successfully delivered.');
+                        console.log(' ');
+                        console.log('    [OK] Project successfully delivered!');
+                        console.log(' ');
+                        console.log(' ');
                     });
                 });
 
@@ -168,6 +174,9 @@ class Caravel {
     getChecksum(cb) {
         let args = caravel.branch || 'HEAD';
         let cmd = `git ls-remote ${caravel.repo} ${args}`;
+
+        console.log(' ');
+        console.log('    Fetching checksum...');
 
         exec(cmd, (e, out, err) => {
             if(e || err) {
