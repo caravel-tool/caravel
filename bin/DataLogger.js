@@ -14,7 +14,6 @@ class DataLogger {
 
   insertLog (status, details) {
     this.initDb()
-    let self = this
     let timestamp = +new Date()
     let date = new Date().toISOString()
 
@@ -28,14 +27,14 @@ class DataLogger {
       data.details = details
     }
 
-    self.db.count({}, (err, count) => {
+    this.db.count({}, (err, count) => {
       if (err) {
         console.log(err)
       }
 
       data.id = count
 
-      self.db.insert(data, (err, newDoc) => {
+      this.db.insert(data, (err, newDoc) => {
         if (err) {
           console.log(err)
         }
@@ -45,7 +44,6 @@ class DataLogger {
 
   updateLastLog (status, details) {
     this.initDb()
-    let self = this
     let timestamp = +new Date()
     let date = new Date().toISOString()
 
@@ -59,7 +57,7 @@ class DataLogger {
       data.details = details
     }
 
-    self.db.find({}).sort({ id: -1 }).limit(1).exec((err, lastLogID) => {
+    this.db.find({}).sort({ id: -1 }).limit(1).exec((err, lastLogID) => {
       if (err) {
         console.log(err)
       }
@@ -68,21 +66,20 @@ class DataLogger {
 
       console.log('Last log id: ' + lastLogID)
 
-      self.db.update({id: lastLogID}, { $set: data }, {}, (err, numRowsAffected, newDoc) => {
+      this.db.update({id: lastLogID}, { $set: data }, {}, (err, numRowsAffected, newDoc) => {
         if (err) {
           console.log(err)
         }
 
-        self.db.persistence.compactDatafile()
+        this.db.persistence.compactDatafile()
       })
     })
   }
 
   getLogs (cb) {
     this.initDb()
-    let self = this
-    self.db.persistence.compactDatafile()
-    self.db.find({}).sort({ id: -1 }).exec((err, docs) => {
+    this.db.persistence.compactDatafile()
+    this.db.find({}).sort({ id: -1 }).exec((err, docs) => {
       if (err) {
         console.log(err)
       }
@@ -92,9 +89,8 @@ class DataLogger {
 
   getLastId (cb) {
     this.initDb()
-    let self = this
-    self.db.persistence.compactDatafile()
-    self.db.find({}).sort({ id: -1 }).limit(1).exec((err, docs) => {
+    this.db.persistence.compactDatafile()
+    this.db.find({}).sort({ id: -1 }).limit(1).exec((err, docs) => {
       if (err) {
         console.log(err)
       }
