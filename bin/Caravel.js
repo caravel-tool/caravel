@@ -90,7 +90,7 @@ class Caravel {
       caravel.buildArgs = []
     }
 
-        // if buildArgs actually have any args... then run them
+    // if buildArgs actually have any args... then run them
     if (true) {
       console.log(' ')
       console.log('    Running build scripts...')
