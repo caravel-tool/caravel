@@ -7,7 +7,14 @@ let caravel
 try {
   caravel = require(process.cwd() + '/caravel.json')
 } catch (e) {
-  console.log('You must run Caravel in a folder containing a caravel.json config file.')
+  console.log('┌──────────────────────────────────────────┐')
+  console.log('│       Configuration file not found       │')
+  console.log('├──────────────────────────────────────────┤')
+  console.log('│                                          │')
+  console.log('│     You must run Caravel in a folder     │')
+  console.log('│  containing a caravel.json config file.  │')
+  console.log('│                                          │')
+  console.log('└──────────────────────────────────────────┘')
   process.exit()
 }
 
