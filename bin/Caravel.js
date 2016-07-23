@@ -17,15 +17,20 @@ class Caravel {
 
   constructor () {
     this.isRunning = false
+    try {
+      this.caravel = require(`${process.cwd()}/caravel.json`)
+    } catch (e) {
+      this.configNotFoundMessage()
+    }
   }
 
   fetch (cb) {
     console.log(' ')
     console.log('    Cloning project...')
 
-    let args = caravel.branch || 'master'
+    let args = this.caravel.branch || 'master'
     args = `-b ${args} --single-branch`
-    let cmd = `git clone ${args} ${caravel.repo} ${opts.temporaryFolder}`
+    let cmd = `git clone ${args} ${this.caravel.repo} ${opts.temporaryFolder}`
 
     rimraf(opts.temporaryFolder, () => {
       let run = exec(cmd, (e, out, err) => {
@@ -41,8 +46,8 @@ class Caravel {
         }
       })
 
-      if (caravel.repoPassword) {
-        run.stdin.write(caravel.repoPassword)
+      if (this.caravel.repoPassword) {
+        run.stdin.write(this.caravel.repoPassword)
       } else {
         console.log('There isn\'t repo password. Something bad happened.')
       }
@@ -75,8 +80,8 @@ class Caravel {
     }
 
     // if buildArgs ommited or not an array, return empty array
-    if (!caravel.buildArgs || !(caravel.buildArgs instanceof Array)) {
-      caravel.buildArgs = []
+    if (!this.caravel.buildArgs || !(this.caravel.buildArgs instanceof Array)) {
+      this.caravel.buildArgs = []
     }
 
     // if buildArgs actually have any args... then run them
@@ -86,7 +91,7 @@ class Caravel {
 
       process.chdir(opts.temporaryFolder)
 
-      exec(caravel.buildArgs.join(' && '), (e, out, err) => {
+      exec(this.caravel.buildArgs.join(' && '), (e, out, err) => {
         if (e || err) {
           self.isRunning = false
           DataLogger.updateLastLog('error', err + out)
@@ -97,10 +102,10 @@ class Caravel {
           process.exit()
         }
 
-        console.log(`    [OK] ${caravel.buildArgs.length} scripts performed.`)
+        console.log(`    [OK] ${this.caravel.buildArgs.length} scripts performed.`)
         console.log('    [OK] Build scripts finished.')
 
-        ncp(`../${opts.temporaryFolder}/${caravel.buildFolder}`, caravel.deployDirectory, (err) => {
+        ncp(`../${opts.temporaryFolder}/${this.caravel.buildFolder}`, this.caravel.deployDirectory, (err) => {
           if (err) {
             console.error(err)
             process.exit()
@@ -146,7 +151,7 @@ class Caravel {
   }
 
   moveBuildFiles () {
-    ncp(opts.temporaryFolder, caravel.deployDirectory, (err) => {
+    ncp(opts.temporaryFolder, this.caravel.deployDirectory, (err) => {
       if (err) {
         console.error(err)
         process.exit()
@@ -158,8 +163,8 @@ class Caravel {
   }
 
   getChecksum (cb) {
-    let args = caravel.branch || 'HEAD'
-    let cmd = `git ls-remote ${caravel.repo} ${args}`
+    let args = this.caravel.branch || 'HEAD'
+    let cmd = `git ls-remote ${this.caravel.repo} ${args}`
 
     console.log(' ')
     console.log('    Fetching checksum...')
@@ -198,6 +203,21 @@ class Caravel {
     })
   }
 
+  configNotFoundMessage () {
+    console.log('┌──────────────────────────────────────────┐')
+    console.log('│       Configuration file not found       │')
+    console.log('├──────────────────────────────────────────┤')
+    console.log('│                                          │')
+    console.log('│     You must run Caravel in a folder     │')
+    console.log('│  containing a caravel.json config file.  │')
+    console.log('│                                          │')
+    console.log('└──────────────────────────────────────────┘')
+    return
+  }
+
+  get config () {
+    return this.caravel
+  }
 }
 
 module.exports = new Caravel()

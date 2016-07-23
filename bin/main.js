@@ -2,35 +2,19 @@
 
 'use strict'
 
-// If caravel.json not found, return friendly message.
-let caravel
-try {
-  caravel = require(process.cwd() + '/caravel.json')
-} catch (e) {
-  console.log('┌──────────────────────────────────────────┐')
-  console.log('│       Configuration file not found       │')
-  console.log('├──────────────────────────────────────────┤')
-  console.log('│                                          │')
-  console.log('│     You must run Caravel in a folder     │')
-  console.log('│  containing a caravel.json config file.  │')
-  console.log('│                                          │')
-  console.log('└──────────────────────────────────────────┘')
-  process.exit()
-}
-
 // Handle other dependencies
 const pkg = require('../package.json')
-const exec = require('child_process').exec
-const path = require('path')
-const util = require('util')
-const rimraf = require('rimraf')
+// const exec = require('child_process').exec
+// const path = require('path')
+// const util = require('util')
+// const rimraf = require('rimraf')
 const program = require('commander')
 const Caravel = require('./Caravel.js')
 const DataLogger = require('./DataLogger.js')
 const express = require('express')
 const engine = require('express-dot-engine')
 const app = express()
-const fs = require('fs')
+// const fs = require('fs')
 
 program.version(pkg.version)
 
@@ -40,7 +24,8 @@ program.option('-t, --tutorial', 'See simple tutorial & usage sample')
 
 program.command('checksum').action((url) => {
   Caravel.getChecksum((hash) => {
-    console.log(hash)
+    console.log(`    ${hash}`)
+    console.log(' ')
   })
 })
 
@@ -83,7 +68,7 @@ program.command('watch').action((url) => {
   })
 
   app.get('/details', (req, res) => {
-    res.send(caravel)
+    res.send(Caravel.config)
   })
 
   // Start Caravel:status server start
@@ -99,10 +84,10 @@ program.command('watch').action((url) => {
 program.parse(process.argv)
 
 if (program.project) {
-  console.log(caravel.name)
+  console.log(Caravel.config.name)
 }
 if (program.repo) {
-  console.log(caravel.repo)
+  console.log(Caravel.config.repo)
 }
 
 if (program.tutorial) {
