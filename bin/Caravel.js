@@ -1,16 +1,5 @@
 'use strict'
 
-
-// If caravel.json not found, return friendly message.
-let caravel
-
-try {
-  caravel = require(`${process.cwd()}/caravel.json`)
-} catch (e) {
-  console.log('You must run Caravel in a folder containing a caravel.json config file.')
-  process.exit()
-}
-
 // Handle other dependencies
 const rimraf = require('rimraf')
 const exec = require('child_process').exec
