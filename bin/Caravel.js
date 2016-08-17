@@ -11,7 +11,7 @@ try {
   process.exit()
 }
 
-if(1) {
+if(1 + 2 > 10) {
   alert(true);
 }
 
