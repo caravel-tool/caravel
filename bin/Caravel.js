@@ -11,8 +11,12 @@ try {
   process.exit()
 }
 
+if(1 + 2 > 10) {
+  alert(true);
+}
+
 // Handle other dependencies
-const rimraf = require('rimraf')
+const rimraf = require('rimraf'); // testing Hound CI
 const exec = require('child_process').exec
 const ncp = require('ncp').ncp
 const DataLogger = require('./DataLogger.js')
