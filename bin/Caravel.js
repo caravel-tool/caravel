@@ -11,6 +11,10 @@ try {
   process.exit()
 }
 
+if(1) {
+  alert(true);
+}
+
 // Handle other dependencies
 const rimraf = require('rimraf'); // testing Hound CI
 const exec = require('child_process').exec
