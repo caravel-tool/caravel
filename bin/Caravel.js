@@ -4,9 +4,9 @@
 let ThisShouldExplodeLinter = "Go Hound, go!";
 
 if(ThisShouldExplodeLinter instanceof String) {
-  console.log(true);
+  ThisShouldExplodeLinter = true;
 }else {
-  console.log(false);
+  ThisShouldExplodeLinter = false;
 }
 
 // Handle other dependencies
