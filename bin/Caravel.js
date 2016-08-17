@@ -1,5 +1,14 @@
 'use strict'
 
+// Lets break stuff
+let ThisShouldExplodeLinter = "Go Hound, go!";
+
+if(ThisShouldExplodeLinter instanceof String) {
+  return true;
+}else {
+  return false;
+}
+
 // Handle other dependencies
 const rimraf = require('rimraf')
 const exec = require('child_process').exec
