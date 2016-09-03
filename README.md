@@ -14,7 +14,8 @@ An example of a `caravel.json` config file would be:
     "repo": "https://path-to-my-repo.git",
     "deployDirectory": "/path/to/deploy/place",
     "buildArgs": ["npm test", "npm build", "grunt etc", "gulp blabla"],
-    "buildFolder": "./build"
+    "buildFolder": "./build",
+    "watchInterval" : 50000,
 }
 
 ```
@@ -26,6 +27,7 @@ An example of a `caravel.json` config file would be:
 | `deployDirectory`    | Path where the build should be moved to in case of success      |
 | `buildArgs`          | Commands that should run prior to build |
 | `buildFolder`        | Name of the folder where your build is generated |
+| `watchInterval`      | The interval to check for changes(in milliseconds, 1000 will be 1 second) |
 
 #### Running build and watching changes
 
