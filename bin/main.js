@@ -4,21 +4,17 @@
 
 // Handle other dependencies
 const pkg = require('../package.json')
-// const exec = require('child_process').exec
-// const path = require('path')
-// const util = require('util')
-// const rimraf = require('rimraf')
 const program = require('commander')
 const Caravel = require('./Caravel.js')
 const DataLogger = require('./DataLogger.js')
 const express = require('express')
 const engine = require('express-dot-engine')
 const app = express()
-// const fs = require('fs')
 
 program.version(pkg.version)
 
 program.option('-p, --project', 'Get project name')
+program.option('--port [port]', 'Define port for watch task')
 program.option('-r, --repo', 'Get repository URL from config file')
 program.option('-t, --tutorial', 'See simple tutorial & usage sample')
 
@@ -44,13 +40,15 @@ program.command('build')
 })
 
 program.command('watch').action((url) => {
-    // Caravel:status server configuration
+  let port = program.port || 7007
+  
+  // Caravel:status server configuration
   app.engine('.html', engine.__express)
   app.set('views', __dirname + '/status/views')
   app.set('view engine', 'dot')
   app.use(express.static(__dirname + '/status/public'))
 
-    // Caravel:Status server routes
+  // Caravel:Status server routes
   app.get('/', function (req, res) {
     res.render('index.html')
   })
@@ -72,7 +70,7 @@ program.command('watch').action((url) => {
   })
 
   // Start Caravel:status server start
-  app.listen(7007, () => {
+  app.listen(port, () => {
 
   })
 
