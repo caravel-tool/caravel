@@ -1,7 +1,12 @@
 > #### ⚠️ This project is still in **early development** and MUST NOT BE USED ON PRODUCTION ⚠️️
 
 # Caravel
+[![NPM Version](http://img.shields.io/npm/v/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
+[![NPM Downloads](https://img.shields.io/npm/dm/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
+
 Deploy your apps in production, effortlessly.
+
+
 
 ## How it works:
 
