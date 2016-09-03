@@ -50,3 +50,7 @@ If you want to keep watching for changes in the repository, simply run:
 ```bash
 caravel watch   # will watch for changes in repository
 ```
+Caravel runs on port `7007` but you can change it using the argument `--port`:
+```bash
+caravel watch --port 5555 # will just watch but using the specified port
+```
