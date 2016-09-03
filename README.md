@@ -6,11 +6,13 @@
 
 Deploy your apps in production, effortlessly.
 
+## Installation
 
+    $ npm install -g caravel
 
-## How it works:
+## Configuration
 
-The first step is to install Caravel on your server using `npm install -g caravel`, then you can create a new folder and add a `caravel.json` to it (it doesn't matter where you're going to create this folder as its only going to keep the configuration and temp files, but its important for your user to have permission on it).
+The first step is to install Caravel on your server, then you can create a new folder and add a `caravel.json` to it (it doesn't matter where you're going to create this folder as its only going to keep the configuration and temp files, but its important for your user to have permission on it).
 
 An example of a `caravel.json` config file would be:
 ```json
