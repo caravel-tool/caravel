@@ -1,11 +1,18 @@
 > #### ⚠️ This project is still in **early development** and MUST NOT BE USED ON PRODUCTION ⚠️️
 
 # Caravel
+[![NPM Version](http://img.shields.io/npm/v/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
+[![NPM Downloads](https://img.shields.io/npm/dm/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
+
 Deploy your apps in production, effortlessly.
 
-## How it works:
+## Installation
 
-The first step is to install Caravel on your server using `npm install -g caravel`, then you can create a new folder and add a `caravel.json` to it (it doesn't matter where you're going to create this folder as its only going to keep the configuration and temp files, but its important for your user to have permission on it).
+    $ npm install -g caravel
+
+## Configuration
+
+The first step is to install Caravel on your server, then you can create a new folder and add a `caravel.json` to it (it doesn't matter where you're going to create this folder as its only going to keep the configuration and temp files, but its important for your user to have permission on it).
 
 An example of a `caravel.json` config file would be:
 ```json
@@ -42,4 +49,8 @@ If you want to keep watching for changes in the repository, simply run:
 
 ```bash
 caravel watch   # will watch for changes in repository
+```
+Caravel runs on port `7007` but you can change it using the argument `--port`:
+```bash
+caravel watch --port 5555 # will just watch but using the specified port
 ```
