@@ -15,7 +15,7 @@ An example of a `caravel.json` config file would be:
     "deployDirectory": "/path/to/deploy/place",
     "buildArgs": ["npm test", "npm build", "grunt etc", "gulp blabla"],
     "buildFolder": "./build",
-    "watchInterval" : 50000,
+    "watchInterval" : 50000
 }
 
 ```
