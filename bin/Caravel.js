@@ -146,7 +146,7 @@ class Caravel {
             })
           }
         })
-      }, 30000)
+      }, this.caravel.watchInterval || 30000)
     })
   }
 
