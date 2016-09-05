@@ -1,16 +1,16 @@
 'use strict'
 
 // Handle other dependencies
+const ncp = require('ncp').ncp
 const rimraf = require('rimraf')
 const exec = require('child_process').exec
-const ncp = require('ncp').ncp
 const DataLogger = require('./DataLogger.js')
 
 ncp.limit = 16
 
 const opts = {
-  temporaryFolder: 'temp_caravel_files',
-  currentTimestamp: 'Not set yet.'
+  currentTimestamp: 'Not set yet.',
+  temporaryFolder: 'temp_caravel_files'
 }
 
 class Caravel {
@@ -85,7 +85,7 @@ class Caravel {
     }
 
     // if buildArgs actually have any args... then run them
-    if (true) {
+    if (this.caravel.buildArgs.length > 0) {
       console.log(' ')
       console.log('    Running build scripts...')
 
