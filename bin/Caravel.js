@@ -25,8 +25,7 @@ class Caravel {
   }
 
   fetch (cb) {
-    console.log(' ')
-    console.log('    Cloning project...')
+    this.console('Cloning project...')
 
     let args = this.caravel.branch || 'master'
     args = `-b ${args} --single-branch`
@@ -39,7 +38,7 @@ class Caravel {
           process.exit()
         }
 
-        console.log('    [OK] Project cloned.')
+        this.console('[OK] Project cloned.')
 
         if (cb) {
           cb()
@@ -49,14 +48,13 @@ class Caravel {
       if (this.caravel.repoPassword) {
         run.stdin.write(this.caravel.repoPassword)
       } else {
-        console.log('There isn\'t repo password. Something bad happened.')
+        this.console('There isn\'t repo password. Something bad happened.')
       }
     })
   }
 
   installDependencies (cb) {
-    console.log(' ')
-    console.log('    Installing npm dependencies (may take a while)...')
+    this.console('Installing npm dependencies (may take a while)...')
 
     exec(`npm install --prefix ${opts.temporaryFolder}`, (e, out, err) => {
       if (e || err) {
@@ -64,7 +62,7 @@ class Caravel {
         process.exit()
       }
 
-      console.log('    [OK] npm dependencies installed.')
+      this.console('[OK] npm dependencies installed.')
 
       if (cb) {
         cb()
@@ -86,8 +84,7 @@ class Caravel {
 
     // if buildArgs actually have any args... then run them
     if (this.caravel.buildArgs.length > 0) {
-      console.log(' ')
-      console.log('    Running build scripts...')
+      this.console('Running build scripts...')
 
       process.chdir(opts.temporaryFolder)
 
@@ -98,12 +95,12 @@ class Caravel {
           console.log(e)
           console.log(err)
           console.log(out)
-          console.log('    [ERROR] Caravel could not build.')
+          this.console('[ERROR] Caravel could not build.')
           process.exit()
         }
 
-        console.log(`    [OK] ${this.caravel.buildArgs.length} scripts performed.`)
-        console.log('    [OK] Build scripts finished.')
+        this.console(`[OK] ${this.caravel.buildArgs.length} scripts performed.`)
+        this.console('[OK] Build scripts finished.')
 
         ncp(`../${opts.temporaryFolder}/${this.caravel.buildFolder}`, this.caravel.deployDirectory, (err) => {
           if (err) {
@@ -117,10 +114,7 @@ class Caravel {
 
             self.isRunning = false
             DataLogger.updateLastLog('success')
-            console.log(' ')
-            console.log('    [OK] Project successfully delivered!')
-            console.log(' ')
-            console.log(' ')
+            this.console('[OK] Project successfully delivered!')
           })
         })
       })
@@ -130,7 +124,7 @@ class Caravel {
   watch (self) {
     self = self || this
 
-    console.log('    Watching for changes...')
+    this.console('Watching for changes...')
 
     self.getChecksum((hash) => {
       self.hash = hash
@@ -140,7 +134,7 @@ class Caravel {
           if (self.hash !== newHash) {
             self.hash = newHash
             clearInterval(loop)
-            console.log('    Change detected. Re-building...')
+            this.console('Change detected. Re-building...')
             self.fetch(() => {
               self.installDependenciesAndBuildAndWatch(self)
             })
@@ -157,7 +151,7 @@ class Caravel {
         process.exit()
       }
       rimraf(opts.temporatyFolder, () => {
-        console.log('    [OK] Project successfully delivered.')
+        this.console('[OK] Project successfully delivered.')
       })
     })
   }
@@ -166,8 +160,7 @@ class Caravel {
     let args = this.caravel.branch || 'HEAD'
     let cmd = `git ls-remote ${this.caravel.repo} ${args}`
 
-    console.log(' ')
-    console.log('    Fetching checksum...')
+    this.console('Fetching checksum...')
 
     exec(cmd, (e, out, err) => {
       if (e || err) {
@@ -175,7 +168,7 @@ class Caravel {
         console.log(err)
         console.log(out)
         process.exit()
-        console.log('    [ERROR] Caravel could not build.')
+        this.console('[ERROR] Caravel could not build.')
         return
       }
       let hash = out.split('\n')[0].replace(/\s{1,}.+/, '')
@@ -201,6 +194,15 @@ class Caravel {
         self.watch(self)
       })
     })
+  }
+
+  console (text) {
+    console.log('    ' + text)
+  }
+
+  consolePadded (text) {
+    console.log(' ')
+    console.log('    ' + text)
   }
 
   configNotFoundMessage () {
