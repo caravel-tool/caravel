@@ -88,11 +88,11 @@ class Caravel {
     if (this.caravel.buildArgs.length > 0) {
       this.console('Running build scripts...')
       exec(this.caravel.buildArgs.join(' && '), (e, out, err) => {
-        this.buildMoveFiles()
+        this.buildMoveFiles(true)
       })
     // else, just move files from git into production
     } else {
-      this.buildMoveFiles()
+      this.buildMoveFiles(false)
     }
   }
 
@@ -111,17 +111,22 @@ class Caravel {
     this.console('[OK] Build scripts finished.')
   }
 
-  buildMoveFiles (cb) {
-    ncp(path.join('../', `${opts.temporaryFolder}`, `${this.caravel.buildFolder}`), this.caravel.deployDirectory, (err) => {
+  buildMoveFiles (hasBuild) {
+    let path = './'
+
+    // If build exists, copy files from build folder
+    // instead of temporary git folder
+    if (hasBuild) {
+      path = path.join('../', `${opts.temporaryFolder}`, `${this.caravel.buildFolder}`)
+    }
+
+    // Copy files
+    ncp(path, this.caravel.deployDirectory, (err) => {
       if (err) {
         console.error(err)
         process.exit()
       }
       rimraf(`../${opts.temporatyFolder}`, () => {
-        if (cb) {
-          cb()
-        }
-
         this.isRunning = false
         DataLogger.updateLastLog('success')
         this.console('[OK] Project successfully delivered!')
