@@ -1,6 +1,7 @@
 'use strict'
 
 // Handle other dependencies
+const path = require('path')
 const ncp = require('ncp').ncp
 const rimraf = require('rimraf')
 const exec = require('child_process').exec
@@ -71,8 +72,6 @@ class Caravel {
   }
 
   build (cb) {
-    let self = this
-
     if (!this.isRunning) {
       DataLogger.insertLog('running')
     }
@@ -82,43 +81,52 @@ class Caravel {
       this.caravel.buildArgs = []
     }
 
+    // get into temporary folder
+    process.chdir(opts.temporaryFolder)
+
     // if buildArgs actually have any args... then run them
     if (this.caravel.buildArgs.length > 0) {
       this.console('Running build scripts...')
-
-      process.chdir(opts.temporaryFolder)
-
       exec(this.caravel.buildArgs.join(' && '), (e, out, err) => {
-        if (e || err) {
-          self.isRunning = false
-          DataLogger.updateLastLog('error', err + out)
-          console.log(e)
-          console.log(err)
-          console.log(out)
-          this.console('[ERROR] Caravel could not build.')
-          process.exit()
+        this.buildMoveFiles()
+      })
+    // else, just move files from git into production
+    } else {
+      this.buildMoveFiles()
+    }
+  }
+
+  buildHandleExecution (e, out, err) {
+    if (e || err) {
+      this.isRunning = false
+      DataLogger.updateLastLog('error', err + out)
+      console.log(e)
+      console.log(err)
+      console.log(out)
+      this.console('[ERROR] Caravel could not build.')
+      process.exit()
+    }
+
+    this.console(`[OK] ${this.caravel.buildArgs.length} scripts performed.`)
+    this.console('[OK] Build scripts finished.')
+  }
+
+  buildMoveFiles (cb) {
+    ncp(path.join('../', `${opts.temporaryFolder}`, `${this.caravel.buildFolder}`), this.caravel.deployDirectory, (err) => {
+      if (err) {
+        console.error(err)
+        process.exit()
+      }
+      rimraf(`../${opts.temporatyFolder}`, () => {
+        if (cb) {
+          cb()
         }
 
-        this.console(`[OK] ${this.caravel.buildArgs.length} scripts performed.`)
-        this.console('[OK] Build scripts finished.')
-
-        ncp(`../${opts.temporaryFolder}/${this.caravel.buildFolder}`, this.caravel.deployDirectory, (err) => {
-          if (err) {
-            console.error(err)
-            process.exit()
-          }
-          rimraf(`../${opts.temporatyFolder}`, () => {
-            if (cb) {
-              cb()
-            }
-
-            self.isRunning = false
-            DataLogger.updateLastLog('success')
-            this.console('[OK] Project successfully delivered!')
-          })
-        })
+        this.isRunning = false
+        DataLogger.updateLastLog('success')
+        this.console('[OK] Project successfully delivered!')
       })
-    }
+    })
   }
 
   watch (self) {
@@ -141,18 +149,6 @@ class Caravel {
           }
         })
       }, this.caravel.watchInterval || 30000)
-    })
-  }
-
-  moveBuildFiles () {
-    ncp(opts.temporaryFolder, this.caravel.deployDirectory, (err) => {
-      if (err) {
-        console.error(err)
-        process.exit()
-      }
-      rimraf(opts.temporatyFolder, () => {
-        this.console('[OK] Project successfully delivered.')
-      })
     })
   }
 
