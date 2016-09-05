@@ -3,6 +3,7 @@
 'use strict'
 
 // Handle other dependencies
+const path = require('path')
 const pkg = require('../package.json')
 const program = require('commander')
 const Caravel = require('./Caravel.js')
@@ -41,12 +42,12 @@ program.command('build')
 
 program.command('watch').action((url) => {
   let port = program.port || 7007
-  
+
   // Caravel:status server configuration
   app.engine('.html', engine.__express)
-  app.set('views', __dirname + '/status/views')
+  app.set('views', path.join(__dirname, '/status/views'))
   app.set('view engine', 'dot')
-  app.use(express.static(__dirname + '/status/public'))
+  app.use(express.static(path.join(__dirname, '/status/public')))
 
   // Caravel:Status server routes
   app.get('/', function (req, res) {

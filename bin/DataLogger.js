@@ -1,10 +1,12 @@
 'use strict'
 
+const nedb = require('nedb')
+
 class DataLogger {
 
   initDb () {
     if (!this.Datastore && !this.db) {
-      this.Datastore = require('nedb')
+      this.Datastore = nedb
 
       this.db = new this.Datastore({
         filename: process.cwd() + '/caravel_log.db', autoload: true
