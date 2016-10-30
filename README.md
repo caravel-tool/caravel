@@ -42,7 +42,7 @@ Once you've created a `caravel.json` file you can then run (inside the same fold
 
 ```bash
 $ caravel fetch      # get newest stuff from repository
-$ caravel build -i   # make the build. (-i arg means npm install will run first)
+$ caravel build   # make the build. (by default, caravel runs npm install before builds. To prevent this, use `-n` flag)
 ```
 
 If you want to keep watching for changes in the repository, simply run:
