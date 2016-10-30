@@ -20,6 +20,7 @@ program.option('-r, --repo', 'Get repository URL from config file')
 program.option('-t, --tutorial', 'See simple tutorial & usage sample')
 
 program.command('checksum').action((url) => {
+  console.log('    Getting checksum...')
   Caravel.getChecksum((hash) => {
     console.log(`    ${hash}`)
     console.log(' ')
@@ -31,53 +32,57 @@ program.command('fetch').action(() => {
 })
 
 program.command('build')
-  .option('-i, --install', 'Use with build command to install dependencies before running build')
+  .option('-n, --no-install', 'Do\'t run \'npm install\' before build')
 	.action((options) => {
-  if (options.install) {
-    Caravel.installDependenciesAndBuild()
-  } else {
+  let args = options.parent.rawArgs
+  if (args.indexOf('--no-install') > -1 || args.indexOf('-n') > -1) {
     Caravel.build()
+  } else {
+    Caravel.installDependenciesAndBuild()
   }
 })
 
-program.command('watch').action((url) => {
-  let port = program.port || 7007
+program.command('watch')
+  .option('-n, --no-install', 'Do\'t run \'npm install\' before build')
+  .action((options) => {
+    let args = options.parent.rawArgs
+    let port = program.port || 7007
 
-  // Caravel:status server configuration
-  app.engine('.html', engine.__express)
-  app.set('views', path.join(__dirname, '/status/views'))
-  app.set('view engine', 'dot')
-  app.use(express.static(path.join(__dirname, '/status/public')))
+    // Caravel:status server configuration
+    app.engine('.html', engine.__express)
+    app.set('views', path.join(__dirname, '/status/views'))
+    app.set('view engine', 'dot')
+    app.use(express.static(path.join(__dirname, '/status/public')))
 
-  // Caravel:Status server routes
-  app.get('/', function (req, res) {
-    res.render('index.html')
-  })
-
-  app.get('/log', (req, res) => {
-    DataLogger.getLogs((docs) => {
-      res.send(docs)
+    // Caravel:Status server routes
+    app.get('/', function (req, res) {
+      res.render('index.html')
     })
-  })
 
-  app.get('/last', (req, res) => {
-    DataLogger.getLastId((id) => {
-      res.send({id: id})
+    app.get('/log', (req, res) => {
+      DataLogger.getLogs((docs) => {
+        res.send(docs)
+      })
     })
+
+    app.get('/last', (req, res) => {
+      DataLogger.getLastId((id) => {
+        res.send({id: id})
+      })
+    })
+
+    app.get('/details', (req, res) => {
+      res.send(Caravel.config)
+    })
+
+    // Start Caravel:status server start
+    app.listen(port, () => {
+
+    })
+
+    // Start Watching for repo changes
+    Caravel.watch(false, args)
   })
-
-  app.get('/details', (req, res) => {
-    res.send(Caravel.config)
-  })
-
-  // Start Caravel:status server start
-  app.listen(port, () => {
-
-  })
-
-  // Start Watching for repo changes
-  Caravel.watch()
-})
 
 // Start listening for CLI
 program.parse(process.argv)
@@ -103,7 +108,7 @@ if (program.tutorial) {
   console.log('│     caravel.json file there              │')
   console.log('│                                          │')
   console.log('│ 4 - Get into that folder and run:        │')
-  console.log('│     caravel fetch && caravel build -i    │')
+  console.log('│     caravel fetch && caravel build       │')
   console.log('│     (sudo may be needed)                 │')
   console.log('│                                          │')
   console.log('│ 5 - To detect changes and build automat. │')

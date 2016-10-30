@@ -45,37 +45,41 @@ class DataLogger {
   }
 
   updateLastLog (status, details) {
-    this.initDb()
-    let timestamp = +new Date()
-    let date = new Date().toISOString()
+    setTimeout(() => {
+      this.initDb()
+      let timestamp = +new Date()
+      let date = new Date().toISOString()
 
-    let data = {
-      timestamp: timestamp,
-      time: date,
-      status: status
-    }
-
-    if (details) {
-      data.details = details
-    }
-
-    this.db.find({}).sort({ id: -1 }).limit(1).exec((err, lastLogID) => {
-      if (err) {
-        console.log(err)
+      let data = {
+        timestamp: timestamp,
+        time: date,
+        status: status
       }
 
-      lastLogID = lastLogID[0].id
+      if (details) {
+        data.details = details
+      }
 
-      console.log('Last log id: ' + lastLogID)
-
-      this.db.update({id: lastLogID}, { $set: data }, {}, (err, numRowsAffected, newDoc) => {
+      this.db.find({}).sort({ id: -1 }).limit(1).exec((err, lastLogID) => {
         if (err) {
           console.log(err)
         }
 
-        this.db.persistence.compactDatafile()
+        if (lastLogID.length > 0) {
+          lastLogID = lastLogID[0].id
+
+          //console.log('Last log id: ' + lastLogID)
+
+          this.db.update({id: lastLogID}, { $set: data }, {}, (err, numRowsAffected, newDoc) => {
+            if (err) {
+              console.log(err)
+            }
+
+            this.db.persistence.compactDatafile()
+          })
+        }
       })
-    })
+    }, 900)
   }
 
   getLogs (cb) {

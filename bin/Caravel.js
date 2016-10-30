@@ -29,7 +29,7 @@ class Caravel {
     this.console('Cloning project...')
 
     let args = this.caravel.branch || 'master'
-    args = `-b ${args} --single-branch`
+    args = `-b ${args} --single-branch --depth=1`
     let cmd = `git clone ${args} ${this.caravel.repo} ${opts.temporaryFolder}`
 
     rimraf(opts.temporaryFolder, () => {
@@ -39,18 +39,14 @@ class Caravel {
           process.exit()
         }
 
-        this.console('[OK] Project cloned.')
+        rimraf(`${opts.temporaryFolder}/.git`, () => {
+          this.console('[OK] Project cloned.')
 
-        if (cb) {
-          cb()
-        }
+          if (cb) {
+            cb()
+          }
+        })
       })
-
-      if (this.caravel.repoPassword) {
-        run.stdin.write(this.caravel.repoPassword)
-      } else {
-        this.console('There isn\'t repo password. Something bad happened.')
-      }
     })
   }
 
@@ -134,10 +130,12 @@ class Caravel {
     })
   }
 
-  watch (self) {
+  watch (self, noInstallArgs) {
     self = self || this
 
-    this.console('Watching for changes...')
+    self.console('Watching from now on...')
+    self.console('(no need for actions, it will just keep running)')
+    self.console(' ')
 
     self.getChecksum((hash) => {
       self.hash = hash
@@ -147,21 +145,23 @@ class Caravel {
           if (self.hash !== newHash) {
             self.hash = newHash
             clearInterval(loop)
-            this.console('Change detected. Re-building...')
+            self.console('Change detected. Re-building...')
             self.fetch(() => {
-              self.installDependenciesAndBuildAndWatch(self)
+              if (noInstallArgs.indexOf('--no-install') > -1 || noInstallArgs.indexOf('-n') > -1) {
+                self.buildAndWatch(self)
+              } else {
+                self.installDependenciesAndBuildAndWatch(self)
+              }
             })
           }
         })
-      }, this.caravel.watchInterval || 30000)
+      }, self.caravel.watchInterval || 30000)
     })
   }
 
-  getChecksum (cb) {
+  getChecksum (cb, hideLog) {
     let args = this.caravel.branch || 'HEAD'
     let cmd = `git ls-remote ${this.caravel.repo} ${args}`
-
-    this.console('Fetching checksum...')
 
     exec(cmd, (e, out, err) => {
       if (e || err) {
@@ -194,6 +194,14 @@ class Caravel {
       self.build(() => {
         self.watch(self)
       })
+    })
+  }
+
+  buildAndWatch (self) {
+    DataLogger.insertLog('running')
+    self.isRunning = true
+    self.build(() => {
+      self.watch(self)
     })
   }
 
