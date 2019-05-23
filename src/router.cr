@@ -5,7 +5,7 @@ class Polygon < Cli::Supercommand
 
   class Triangle < Cli::Command
     def run
-      puts 3
+      puts 4
     end
   end
 
