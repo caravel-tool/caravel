@@ -1,4 +1,7 @@
+lib/
 node_modules/
 npm-debug.log
 .DS_Store
-./caravel
+caravel
+caravel.dwarf
+shard.lock
