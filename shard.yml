@@ -1,0 +1,17 @@
+name: caravel
+version: 0.1.0
+
+authors:
+  - Claudio Holanda <claudiohw@gmail.com>
+
+targets:
+  caravel:
+    main: src/caravel.cr
+
+dependencies:
+  admiral:
+    github: jwaldrip/admiral.cr
+
+crystal: 0.27.2
+
+license: MIT
