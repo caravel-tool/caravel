@@ -34,11 +34,10 @@ module CheckCommand
         file.close()
       end
     end
-
-    self.run_tasks()
   end
 
   def check_updates
+    Messages.log("Checking for updates...")
     config = self.get_config()
     repo_path = self.get_repo_path()
     branch = config.branch || "master"
@@ -46,7 +45,6 @@ module CheckCommand
     read_output = IO::Memory.new
 
     Dir.cd(repo_path) do
-      Messages.log("Checking for updates...")
       Process.new("git", ["pull"]).wait
       Process.new("git", ["log", "origin/#{branch}"], output: read_output).wait
     end
