@@ -5,7 +5,7 @@
   <br>
   <br>
   <br>
-  **Caravel**: Deliver simple things, with simplicity.
+  <b>Caravel</b>: Deliver simple things, with simplicity.
   <br>
   <br>
 </p>
@@ -19,8 +19,6 @@ The idea is simple: Small projects (such as simple Node apps or static websites)
 As of today Caravel only supports being compiled from source. In the future, binaries will be released for Linux.
 
 Make sure you have *git*, *SQLite* and *Crystal*.
-
-Example in Ubuntu:
 
 Installing git and SQLite (Ubuntu):
 
