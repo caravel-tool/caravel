@@ -1,7 +1,5 @@
-> #### ⚠️ This project is still in **early development** and MUST NOT BE USED ON PRODUCTION ⚠️️
-
 <p align="center">
-  <img src="logo.svg" width="100">
+  <img src="logo.svg" width="100" style="margin: 50px 0">
   <br>
   Caravel: Deliver simple things, with simplicity.
 </p>
