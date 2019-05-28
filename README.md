@@ -10,7 +10,7 @@
   <br>
 </p>
 
-Caravel is a tool (still in development) to help devs publish and update code at production servers.
+Caravel is a tool (still in early development) to help devs publish and update code at production servers.
 
 The idea is simple: Small projects (such as simple Node apps or static websites) doesn't consume lot's of resources in order to build. So instead of hiring CI/CD paid plans or wasting time building robust config stacks, devs can make use of their own VPS to build and publish updates.
 
