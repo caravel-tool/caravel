@@ -1,12 +1,11 @@
 <p align="center">
   <br>
   <br>
-  <br>
   <img src="logo.svg" width="100" style="margin: 50px 0">
   <br>
   <br>
   <br>
-  Caravel: Deliver simple things, with simplicity.
+  **Caravel**: Deliver simple things, with simplicity.
   <br>
   <br>
 </p>
