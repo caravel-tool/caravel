@@ -1,56 +1,85 @@
 > #### ⚠️ This project is still in **early development** and MUST NOT BE USED ON PRODUCTION ⚠️️
 
-# Caravel
-[![NPM Version](http://img.shields.io/npm/v/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
-[![NPM Downloads](https://img.shields.io/npm/dm/caravel.svg?style=flat)](https://www.npmjs.org/package/caravel)
+<p align="center">
+  <img src="logo.svg" width="100">
+  <br>
+  Caravel: Deliver simple things, with simplicity.
+</p>
 
-Deploy your apps in production, effortlessly.
+Caravel is a tool (still in development) to help devs publish and update code at production servers.
+
+The idea is simple: Small projects (such as simple Node apps or static websites) doesn't consume lot's of resources in order to build. So instead of hiring CI/CD paid plans or wasting time building robust config stacks, devs can make use of their own VPS to build and publish updates.
 
 ## Installation
 
-    $ npm install -g caravel
+As of today Caravel only supports being compiled from source. In the future, binaries will be released for Linux.
 
-## Configuration
+Make sure you have *git*, *SQLite* and *Crystal*.
 
-The first step is to install Caravel on your server, then you can create a new folder and add a `caravel.json` to it (it doesn't matter where you're going to create this folder as its only going to keep the configuration and temp files, but its important for your user to have permission on it).
+Example in Ubuntu:
 
-An example of a `caravel.json` config file would be:
-```json
-{
-    "name": "My Project",
-    "repo": "https://path-to-my-repo.git",
-    "deployDirectory": "/path/to/deploy/place",
-    "buildArgs": ["npm test", "npm build", "grunt etc", "gulp blabla"],
-    "buildFolder": "./build",
-    "watchInterval": 50000
-}
+Installing git and SQLite (Ubuntu):
 
 ```
-
-| Key                  | Definition        |
-| -------------------- |-------------|
-| `name`               | The project name (you can give the name you want to) |
-| `repo`               | Git repository URL      |
-| `buildArgs`          | Commands that should run prior to build |
-| `buildFolder`        | Name of the folder where your build is generated |
-| `deployDirectory`    | Path where the build should be moved to in case of success      |
-| `watchInterval`      | The interval to check for changes(in milliseconds, 1000 will be 1 second) |
-
-#### Running build and watching changes
-
-Once you've created a `caravel.json` file you can then run (inside the same folder):
-
-```bash
-$ caravel fetch      # get newest stuff from repository
-$ caravel build   # make the build. (by default, caravel runs npm install before builds. To prevent this, use `-n` flag)
+apt-get install git-core sqlite3 
 ```
 
-If you want to keep watching for changes in the repository, simply run:
+Installing Crystal (Ubuntu):
 
-```bash
-caravel watch   # will watch for changes in repository
 ```
-Caravel runs on port `7007` but you can change it using the argument `--port`:
-```bash
-caravel watch --port 5555 # will just watch but using the specified port
+curl -sSL https://dist.crystal-lang.org/apt/setup.sh | sudo bash
 ```
+
+And then:
+
+```
+sudo apt install crystal
+```
+
+If you face any issues, please [read this guide](https://crystal-lang.org/reference/installation/).
+
+
+Then you can build the project:
+
+```
+cd caravel/
+crystal build src/caravel
+sudo cp ./caravel /usr/local/bin
+```
+
+Now you can check if Caravel is available by running:
+
+```
+caravel help
+```
+
+## Usage
+
+In order to use Caravel you first need a recipe file.
+
+### Recipes
+
+Caravel always looks for a `caravel.yml` file when run on a directory.
+
+Here is a minimal example of a config file (also called recipe):
+
+```yaml
+name: your-repo
+repo: git@github.com:you/your-repo
+trigger: tag
+run:
+  - npm install
+  - npm run build
+  - cp -R dist /www/var/html/
+```
+
+Once you have a recipe, you can call Caravel with the command:
+```
+caravel start
+```
+
+More details on recipes soon.
+
+----
+
+This README is still in work.
