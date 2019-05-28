@@ -1,7 +1,14 @@
 <p align="center">
+  <br>
+  <br>
+  <br>
   <img src="logo.svg" width="100" style="margin: 50px 0">
   <br>
+  <br>
+  <br>
   Caravel: Deliver simple things, with simplicity.
+  <br>
+  <br>
 </p>
 
 Caravel is a tool (still in development) to help devs publish and update code at production servers.
